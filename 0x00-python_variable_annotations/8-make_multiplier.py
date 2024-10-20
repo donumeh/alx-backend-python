@@ -22,6 +22,6 @@ def make_multiplier(multiplier: float) -> Callable[[float], float]:
         """
         import math
 
-        return math.pow(multiplier, 2)
+        return m * multiplier
 
     return mul
