@@ -3,9 +3,10 @@
 """
 Type annotation for function sum_list
 """
+from typing import List
 
 
-def sum_list(input_list: list[float]) -> float:
+def sum_list(input_list: List[float]) -> float:
     """
     sum_list: sums up a list of floats
 
