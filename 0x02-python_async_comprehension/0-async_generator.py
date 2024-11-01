@@ -6,10 +6,10 @@ Async Generators
 
 import asyncio
 import random
-from typing import AsyncGenerator
+from typing import Generator
 
 
-async def async_generator() -> AsyncGenerator[int, None]:
+async def async_generator() -> Generator[float, None, None]:
     """
     async_generator: loops 10 times awaits for 1 sec an yields a random num
     """
