@@ -37,9 +37,14 @@ class TestGithubOrgClient(unittest.TestCase):
         Test the public_repos_url returns a payload
         """
 
-        mock_payload = {"repos_url": "https://api.github.com/orgs/google/repos"}
+        mock_payload = {
+                "repos_url": "https://api.github.com/orgs/google/repos"
+        }
 
-        with patch("client.GithubOrgClient.org", new_callable=PropertyMock) as mock_org:
+        with patch(
+                "client.GithubOrgClient.org",
+                new_callable=PropertyMock
+                ) as mock_org:
 
             mock_org.return_value = mock_payload
 
@@ -58,14 +63,30 @@ class TestGithubOrgClient(unittest.TestCase):
         """
 
         mock_get.return_value = [
-            {"name": "repo1", "license": {"key": "MIT"}},
-            {"name": "repo2", "license": {"key": "GPL"}},
-            {"name": "repo3", "license": {"key": "MIT"}},
+            {
+                "name": "repo1",
+                "license": {
+                    "key": "MIT"
+                    }
+                },
+            {
+                "name": "repo2",
+                "license": {
+                    "key": "GPL"
+                    }
+            },
+            {
+                "name": "repo3",
+                "license": {
+                    "key": "MIT"
+                    }
+            },
         ]
         mock_repo_url = "https://api.github.com/orgs/google/repos"
 
         with patch(
-            "client.GithubOrgClient._public_repos_url", new_callable=PropertyMock
+            "client.GithubOrgClient._public_repos_url",
+            new_callable=PropertyMock
         ) as mock_org:
 
             mock_org.return_value = mock_repo_url
