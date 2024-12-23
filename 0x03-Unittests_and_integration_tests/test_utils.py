@@ -7,6 +7,7 @@ from parameterized import parameterized
 from typing import Mapping, Tuple, Any
 import utils
 import unittest
+from unittest.mock import (patch, Mock)
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -46,7 +47,7 @@ class TestGetJson(unittest.TestCase):
     Test Case for get json function in utils
     """
 
-    @unittest.mock.patch("utils.requests.get")
+    @patch("utils.requests.get")
     def test_get_json(self, mock_get):
         """
         Define a test case to test utils.get_json
@@ -59,7 +60,7 @@ class TestGetJson(unittest.TestCase):
 
         for test_url, test_payload in test_cases:
 
-            mock_response = unittest.mock.Mock()
+            mock_response = Mock()
             mock_response.json.return_value = test_payload
             mock_get.return_value = mock_response
 
