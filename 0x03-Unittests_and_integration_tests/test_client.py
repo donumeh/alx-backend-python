@@ -63,24 +63,9 @@ class TestGithubOrgClient(unittest.TestCase):
         """
 
         mock_get.return_value = [
-            {
-                "name": "repo1",
-                "license": {
-                    "key": "MIT"
-                    }
-                },
-            {
-                "name": "repo2",
-                "license": {
-                    "key": "GPL"
-                    }
-            },
-            {
-                "name": "repo3",
-                "license": {
-                    "key": "MIT"
-                    }
-            },
+            {"name": "repo1", "license": {"key": "MIT"}},
+            {"name": "repo2", "license": {"key": "GPL"}},
+            {"name": "repo3", "license": {"key": "MIT"}},
         ]
         mock_repo_url = "https://api.github.com/orgs/google/repos"
 
@@ -103,3 +88,19 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get.assert_called_once()
 
             self.assertEqual(repos_again, ["repo1", "repo3"])
+
+    @parameterized.expand(
+        [
+            ({"license": {"key": "my_license"}}, "my_license", True),
+            ({"license": {"key": "other_license"}}, "my_license", False),
+        ]
+    )
+    def test_has_license(self, license_map, value, result):
+        """
+        Test to run on method has_license
+        """
+
+        self.assertEqual(
+                GithubOrgClient.has_license(license_map, value),
+                result
+                )
