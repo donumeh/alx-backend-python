@@ -32,16 +32,6 @@ class TestGithubOrgClient(unittest.TestCase):
         )
         self.assertEqual(result, {"login": org_name})
 
-    """
-    memoize turns methods into properties. Read up on how to mock a property (see resource).
-
-Implement the test_public_repos_url method to unit-test GithubOrgClient._public_repos_url.
-
-Use patch as a context manager to patch GithubOrgClient.org and make it return a known payload.
-
-Test that the result of _public_repos_url is the expected one based on the mocked payload
-    """
-
     def test_public_repos_url(self):
         """
         Test the public_repos_url returns a payload
@@ -49,15 +39,46 @@ Test that the result of _public_repos_url is the expected one based on the mocke
 
         mock_payload = {"repos_url": "https://api.github.com/orgs/google/repos"}
 
-
         with patch("client.GithubOrgClient.org", new_callable=PropertyMock) as mock_org:
 
             mock_org.return_value = mock_payload
 
-            client = GithubOrgClient('google')
+            client = GithubOrgClient("google")
 
             repo_url = client._public_repos_url
 
             mock_org.assert_called_once()
 
-            self.assertEqual(repo_url, mock_payload['repos_url'])
+            self.assertEqual(repo_url, mock_payload["repos_url"])
+
+    @patch("client.get_json")
+    def test_public_repos(self, mock_get):
+        """
+        Test public repos in GithubOrgClient
+        """
+
+        mock_get.return_value = [
+            {"name": "repo1", "license": {"key": "MIT"}},
+            {"name": "repo2", "license": {"key": "GPL"}},
+            {"name": "repo3", "license": {"key": "MIT"}},
+        ]
+        mock_repo_url = "https://api.github.com/orgs/google/repos"
+
+        with patch(
+            "client.GithubOrgClient._public_repos_url", new_callable=PropertyMock
+        ) as mock_org:
+
+            mock_org.return_value = mock_repo_url
+
+            client = GithubOrgClient("google")
+            repos = client.public_repos(license="MIT")
+
+            mock_get.assert_called_once_with(mock_repo_url)
+            mock_org.assert_called_once()
+
+            self.assertEqual(repos, ["repo1", "repo3"])
+
+            repos_again = client.public_repos(license="MIT")
+            mock_get.assert_called_once()
+
+            self.assertEqual(repos_again, ["repo1", "repo3"])
